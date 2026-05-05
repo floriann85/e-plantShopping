@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
-// "Task 2 completed: ProductList layout + add-to-cart"
+// "Task 2: ProductList layout + add-to-cart"
 import { useDispatch } from "react-redux";
 import { addItem } from "./CartSlice";
+// "Task 5: Integrate Redux functionality in your components"
+import { useSelector } from "react-redux";
 
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-  // "Task 2 completed: ProductList layout + add-to-cart"
+  // "Task 2: ProductList layout + add-to-cart"
   const [addedToCart, setAddedToCart] = useState({});
   const dispatch = useDispatch();
+  // "Task 5: Integrate Redux functionality in your components"
+  const cartItems = useSelector((state) => state.cart.items);
 
   const plantsArray = [
     {
@@ -295,15 +299,22 @@ function ProductList({ onHomeClick }) {
     setShowCart(false);
   };
 
-  // "Task 2 completed: ProductList layout + add-to-cart"
+  // "Task 2: ProductList layout + add-to-cart"
   const handleAddToCart = (plant) => {
     dispatch(addItem(plant));
-    setAddedToCart(prev => ({
+    setAddedToCart((prev) => ({
       ...prev,
-      [plant.name]: true
+      [plant.name]: true,
     }));
   };
-  
+
+  // "Task 5: Integrate Redux functionality in your components"
+  const calculateTotalQuantity = () => {
+    return cartItems
+      ? cartItems.reduce((total, item) => total + item.quantity, 0)
+      : 0;
+  };
+
   return (
     <div>
       <div className="navbar" style={styleObj}>
@@ -352,13 +363,18 @@ function ProductList({ onHomeClick }) {
                     id="mainIconPathAttribute"
                   ></path>
                 </svg>
+
+                {/* Task 5: Show total quantity */}
+                <span style={{ fontSize: "28px", marginLeft: "10px" }}>
+                  {calculateTotalQuantity()}
+                </span>
               </h1>
             </a>
           </div>
         </div>
       </div>
 
-      {/* Task 2 completed: ProductList layout + add-to-cart */}        
+      {/* Task 2: ProductList layout + add-to-cart */}
       {!showCart ? (
         <div className="product-grid">
           {plantsArray.map((category, index) => (
